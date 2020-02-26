@@ -35,13 +35,13 @@ class NewVisitorTest(unittest.TestCase):
         # When she hits enter, the page updates, and now the page lists
         # "1. Buy tuna" as an item in a to-do list
         inputbox.send_keys(Keys.ENTER)
-        time.sleep(1)
+        time.sleep(3)
 
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
         self.assertTrue(
             any(row.text == '1: Buy tuna' for row in rows),
-            "New to-do item did not appear in table"
+            f"Contents were:\n{table.text}"
         )
 
         # There is still a text box ready for her to enter another item. She
