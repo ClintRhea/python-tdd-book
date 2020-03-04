@@ -9,8 +9,16 @@ class NewVisitorTest(unittest.TestCase):
     def setUp(self):
         self.browser = webdriver.Firefox()
 
+
     def tearDown(self):
         self.browser.quit()
+
+
+    def check_for_row_in_list_table(self, row_text):
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn(row_text, [row.text for row in rows])
+
 
     def test_can_start_a_list_and_retrieve_it_later(self):
         # Turner needs to create a list, so she goes to her favorite on-line
@@ -36,10 +44,7 @@ class NewVisitorTest(unittest.TestCase):
         # "1. Buy tuna" as an item in a to-do list
         inputbox.send_keys(Keys.ENTER)
         time.sleep(1)
-
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn('1: Buy tuna', [row.text for row in rows])
+        self.check_for_row_in_list_table('1: Buy tuna')
 
         # There is still a text box ready for her to enter another item. She
         # enters "open tuna can"
@@ -49,9 +54,8 @@ class NewVisitorTest(unittest.TestCase):
         time.sleep(1)
 
         # The page updates again, and now shows both items on list
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn('2: open tuna can', [row.text for row in rows])
+        self.check_for_row_in_list_table('1: Buy tuna')
+        self.check_for_row_in_list_table('2: open tuna can')
 
         # Turner wonders if the site saves the list. Then she notices a
         # unique URL has been generated automatically, and some text on the
