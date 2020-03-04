@@ -35,24 +35,28 @@ class NewVisitorTest(unittest.TestCase):
         # When she hits enter, the page updates, and now the page lists
         # "1. Buy tuna" as an item in a to-do list
         inputbox.send_keys(Keys.ENTER)
-        time.sleep(3)
+        time.sleep(1)
 
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(
-            any(row.text == '1: Buy tuna' for row in rows),
-            f"Contents were:\n{table.text}"
-        )
+        self.assertIn('1: Buy tuna', [row.text for row in rows])
 
         # There is still a text box ready for her to enter another item. She
         # enters "open tuna can"
-        self.fail('Finish the test!')
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('open tuna can')
+        inputbox.send_keys(Keys.ENTER)
+        time.sleep(1)
 
         # The page updates again, and now shows both items on list
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn('2: open tuna can', [row.text for row in rows])
 
         # Turner wonders if the site saves the list. Then she notices a
         # unique URL has been generated automatically, and some text on the
         # page explains this.
+        self.fail('Finish the test!')
 
         # Turner visits the unique URL and her to-do list is still there
 
